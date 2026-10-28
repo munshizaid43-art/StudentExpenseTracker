@@ -1,0 +1,15 @@
+@model MonthlyBudget
+@{
+    ViewData["Title"] = "Monthly budget";
+    var spent = (decimal)(ViewBag.Spent ?? 0m);
+    var remaining = Model.Amount - spent;
+}
+<div class="mb-4"><p class="eyebrow mb-1">PLAN YOUR SPENDING</p><h1 class="page-title">Monthly budget</h1><p class="text-secondary">Set a limit for the current month and keep an eye on spending.</p></div>
+<div class="row g-3">
+  <div class="col-12 col-lg-5"><div class="panel-card"><h2 class="section-title">Set this month's budget</h2><form asp-action="Save" method="post"><input type="hidden" asp-for="Month" /><input type="hidden" asp-for="Year" /><div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div><div class="mb-3"><label asp-for="Amount" class="form-label">Budget amount (₹)</label><div class="input-group"><span class="input-group-text">₹</span><input asp-for="Amount" class="form-control" min="1" step="0.01" placeholder="e.g. 8000"/></div><span asp-validation-for="Amount" class="text-danger small"></span></div><p class="text-secondary small">This saves a budget for @DateTime.Today.ToString("MMMM yyyy").</p><button class="btn btn-primary" type="submit">Save budget</button></form></div></div>
+  <div class="col-12 col-lg-7"><div class="panel-card h-100"><h2 class="section-title">Budget summary</h2><div class="budget-line"><span>Monthly budget</span><strong>@Model.Amount.ToString("C", new System.Globalization.CultureInfo("en-IN"))</strong></div><div class="budget-line"><span>Spent this month</span><strong>@spent.ToString("C", new System.Globalization.CultureInfo("en-IN"))</strong></div><div class="budget-line"><span>Remaining</span><strong class="@(remaining < 0 ? "text-danger" : "text-success")">@remaining.ToString("C", new System.Globalization.CultureInfo("en-IN"))</strong></div>
+  @if (Model.Amount > 0) { var percent = Math.Min(100, (double)(spent / Model.Amount * 100)); <div class="progress mt-3"><div class="progress-bar @(spent > Model.Amount ? "bg-danger" : "bg-primary")" style="width:@percent%"></div></div><div class="small text-secondary mt-2">@percent.ToString("0")% of budget used</div> }
+  @if (Model.Amount > 0 && spent > Model.Amount) { <div class="alert alert-danger mt-3 mb-0">You are over budget by @((spent - Model.Amount).ToString("C", new System.Globalization.CultureInfo("en-IN"))).</div> }
+  </div></div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

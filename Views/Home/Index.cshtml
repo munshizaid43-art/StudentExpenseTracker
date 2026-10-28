@@ -1,0 +1,30 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var monthName = new DateTime(Model.Year, Model.Month, 1).ToString("MMMM yyyy");
+}
+@if (ViewBag.WelcomeMessage is string welcome) { <div class="alert alert-info">@welcome</div> }
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+  <div><p class="eyebrow mb-1">YOUR MONEY, MADE SIMPLE</p><h1 class="page-title mb-1">Dashboard</h1><div class="text-secondary">@monthName overview</div></div>
+  <a class="btn btn-primary" asp-controller="Expenses" asp-action="Create">＋ Add expense</a>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-6 col-xl-3"><div class="stat-card"><div class="stat-label">This month's spending</div><div class="stat-value">@Model.MonthExpenses.ToString("C", new System.Globalization.CultureInfo("en-IN"))</div><div class="stat-note">Expenses recorded this month</div></div></div>
+  <div class="col-12 col-md-6 col-xl-3"><div class="stat-card"><div class="stat-label">Monthly budget</div><div class="stat-value">@Model.MonthlyBudget.ToString("C", new System.Globalization.CultureInfo("en-IN"))</div><div class="stat-note"><a asp-controller="Budgets" asp-action="Index">Manage budget</a></div></div></div>
+  <div class="col-12 col-md-6 col-xl-3"><div class="stat-card"><div class="stat-label">Budget remaining</div><div class="stat-value @(Model.RemainingBudget < 0 ? "text-danger" : "text-success")">@Model.RemainingBudget.ToString("C", new System.Globalization.CultureInfo("en-IN"))</div><div class="stat-note">Budget minus spending</div></div></div>
+  <div class="col-12 col-md-6 col-xl-3"><div class="stat-card"><div class="stat-label">All-time expenses</div><div class="stat-value">@Model.TotalAllExpenses.ToString("C", new System.Globalization.CultureInfo("en-IN"))</div><div class="stat-note">@Model.ExpenseCount transactions</div></div></div>
+</div>
+@if (Model.MonthlyBudget > 0)
+{
+    var percent = Math.Min(100, (double)(Model.MonthExpenses / Model.MonthlyBudget * 100));
+    <div class="panel-card mb-4"><div class="d-flex justify-content-between mb-2"><strong>Monthly budget usage</strong><span>@percent.ToString("0")%</span></div><div class="progress" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar @(percent >= 100 ? "bg-danger" : "bg-primary")" style="width:@percent%"></div></div>@if (Model.MonthExpenses > Model.MonthlyBudget) { <p class="text-danger small mt-2 mb-0">You have exceeded your monthly budget.</p> }</div>
+}
+<div class="panel-card">
+  <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="section-title mb-0">Recent expenses</h2><a asp-controller="Expenses" asp-action="Index">View all</a></div>
+  @if (!Model.RecentExpenses.Any()) { <div class="empty-state"><div class="empty-icon">₹</div><h3>No expenses yet</h3><p>Add your first transaction to get started.</p><a class="btn btn-primary" asp-controller="Expenses" asp-action="Create">Add first expense</a></div> }
+  else {
+    <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Expense</th><th>Category</th><th>Date</th><th class="text-end">Amount</th></tr></thead><tbody>
+    @foreach (var item in Model.RecentExpenses) { <tr><td class="fw-semibold">@item.Title</td><td><span class="category-pill">@item.Category</span></td><td>@item.ExpenseDate.ToString("dd MMM yyyy")</td><td class="text-end fw-bold">@item.Amount.ToString("C", new System.Globalization.CultureInfo("en-IN"))</td></tr> }
+    </tbody></table></div>
+  }
+</div>

@@ -1,0 +1,8 @@
+@model Expense
+@{
+    ViewData["Title"] = "Delete expense";
+}
+<div class="form-page"><a asp-action="Index" class="text-decoration-none">← Back to expenses</a><div class="panel-card mt-3"><div class="danger-icon">!</div><h1 class="page-title">Delete this expense?</h1><p class="text-secondary">This action cannot be undone.</p>
+<div class="delete-summary"><div><span class="text-secondary">Title</span><strong>@Model.Title</strong></div><div><span class="text-secondary">Date</span><strong>@Model.ExpenseDate.ToString("dd MMM yyyy")</strong></div><div><span class="text-secondary">Amount</span><strong>@Model.Amount.ToString("C", new System.Globalization.CultureInfo("en-IN"))</strong></div></div>
+<form asp-action="Delete" method="post"><input type="hidden" asp-for="Id"/><button type="submit" class="btn btn-danger">Yes, delete expense</button> <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a></form>
+</div></div>

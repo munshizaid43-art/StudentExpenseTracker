@@ -1,0 +1,9 @@
+@model Expense
+<div class="row g-3">
+  <div class="col-12 col-md-6"><label asp-for="Title" class="form-label"></label><input asp-for="Title" class="form-control" placeholder="e.g. College lunch"/><span asp-validation-for="Title" class="text-danger small"></span></div>
+  <div class="col-12 col-md-6"><label asp-for="Amount" class="form-label">Amount (₹)</label><div class="input-group"><span class="input-group-text">₹</span><input asp-for="Amount" class="form-control" type="number" min="0.01" step="0.01" placeholder="250.00"/></div><span asp-validation-for="Amount" class="text-danger small"></span></div>
+  <div class="col-12 col-md-6"><label asp-for="Category" class="form-label"></label><select asp-for="Category" class="form-select">@foreach (string c in ViewBag.Categories) { <option value="@c">@c</option> }</select><span asp-validation-for="Category" class="text-danger small"></span></div>
+  <div class="col-12 col-md-6"><label asp-for="ExpenseDate" class="form-label"></label><input asp-for="ExpenseDate" class="form-control" type="date"/><span asp-validation-for="ExpenseDate" class="text-danger small"></span></div>
+  <div class="col-12 col-md-6"><label asp-for="PaymentMethod" class="form-label"></label><select asp-for="PaymentMethod" class="form-select">@foreach (string p in ViewBag.PaymentMethods) { <option value="@p">@p</option> }</select><span asp-validation-for="PaymentMethod" class="text-danger small"></span></div>
+  <div class="col-12"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control" rows="3" placeholder="Optional notes"></textarea><span asp-validation-for="Description" class="text-danger small"></span></div>
+</div>

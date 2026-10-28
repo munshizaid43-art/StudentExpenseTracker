@@ -1,0 +1,14 @@
+@model Expense
+@{
+    ViewData["Title"] = "Edit expense";
+}
+<div class="form-page"><div class="mb-4"><a asp-action="Index" class="text-decoration-none">← Back to expenses</a><h1 class="page-title mt-2">Edit expense</h1><p class="text-secondary">Update the transaction details.</p></div>
+<div class="panel-card">
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+  <input type="hidden" asp-for="Id" />
+  <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+  <partial name="_ExpenseForm" model="Model" />
+  <div class="d-flex gap-2 mt-4"><button class="btn btn-primary" type="submit">Save changes</button><a asp-action="Index" class="btn btn-outline-secondary">Cancel</a></div>
+</form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
